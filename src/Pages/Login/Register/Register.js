@@ -26,7 +26,7 @@ const Register = () => {
         return <Loading></Loading>
     }
     if (user) {
-        console.log(user);
+        return <p>User exist</p>
     }
 
     const handleRegister = async event => {
@@ -40,7 +40,6 @@ const Register = () => {
         await updateProfile({ displayName: name });
         console.log('Updated profile');
         navigate('/home')
-
 
     }
     return (
