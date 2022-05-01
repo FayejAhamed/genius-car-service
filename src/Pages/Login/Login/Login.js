@@ -6,9 +6,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import auth from '../../../firebase.init';
 import Loading from '../../Shared/Loading/Loading';
 import SocialLogin from '../SocialLogin/SocialLogin';
-import { ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PageTitle from '../../Shared/PageTitle/PageTitle';
+import axios from 'axios';
 
 const Login = () => {
     const emailRef = useRef('');
@@ -31,7 +32,7 @@ const Login = () => {
         return <Loading></Loading>
     }
       if(user){
-        navigate(from, { replace: true });
+        // navigate(from, { replace: true });
     }
     if (error) {
         errorElement =
@@ -42,12 +43,15 @@ const Login = () => {
         
     }
 
-    const handleSubmit = event =>{
+    const handleSubmit = async event =>{
         event.preventDefault();
         const email = emailRef.current.value;
         const password = passwordRef.current.value;
 
-        signInWithEmailAndPassword(email, password)
+       await signInWithEmailAndPassword(email, password)
+       const {data} =await axios.post('http://localhost:5000/login', {email});
+       localStorage.setItem('accessToken', data.accessToken);
+       navigate(from, { replace: true });
     }
 
     const navigateRegister = event =>{
@@ -85,7 +89,6 @@ const Login = () => {
             <p>New to Genius Car? <Link className='text-primary text-decoration-none pe-auto' to='/register' onClick={navigateRegister}>Please Register</Link></p>
             <p>Forget Password? <button className='btn btn-link text-primary text-decoration-none pe-auto' onClick={resetPassword}>Reset password</button></p>
             <SocialLogin></SocialLogin>
-            <ToastContainer/>
         </div>
     );
 };
